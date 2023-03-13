@@ -7,9 +7,7 @@ const loadPhones = async(searchText, dataLimit) =>{
 
 const displayPhones = (phones, dataLimit) =>{
     const phonesContainer = document.getElementById('phones-container');
-    phonesContainer.innerHTML = "";
-    // phonesContainer.textContent = '';
-    // display 10 phones only 
+    phonesContainer.innerHTML = ""; 
     const showAll = document.getElementById('show-all');
     if(dataLimit && phones.length > 6) {
         phones = phones.slice(0, 6);
@@ -59,7 +57,7 @@ const processSearch = (dataLimit) =>{
 // handle search button click
 document.getElementById('btn-search').addEventListener('click', function(){
     // start loader
-    
+    toggleSpinner(true);
     processSearch(6);
 })
 
@@ -89,32 +87,32 @@ document.getElementById('btn-show-all').addEventListener('click', function(){
     processSearch();
 })
 
+// LOADPHONE DETAILS
 const loadPhoneDetails = async (id) =>{
-    const url =`https://openapi.programming-hero.com/api/phone/${id}`;
-    console.log(url);
+    const url =`https://openapi.programming-hero.com/api/phone/${id}`; 
     const res = await fetch(url);
     const data = await res.json();
     displayPhoneDetails(data.data);
 }
 
-const displayPhoneDetails = phone =>{
-    console.log(phone);
+//DISPLAY POHNE DETAILS USING MODAL
+const displayPhoneDetails = phone =>{ 
     const modalTitle = document.getElementById('phoneDetailModalLabel');
     modalTitle.innerText = phone.brand;
-    const phoneDetails = document.getElementById('phone-details'); 
+    const phoneDetails = document.getElementById('phone-details');  
+    const sensors = phone.mainFeatures.sensors;  
+    
+    let sensorList = "";
+    for (const item of sensors) { 
+        sensorList += `<li>${item}</li>` 
+    }
 
-    const sensors = phone.mainFeatures.sensors;
-
-    let sensorsList = "";
-    for (const sensor of sensors) {
-        sensorsList += `<li class="custom-font-4">${sensor}</li>`;
-    };
     phoneDetails.innerHTML = `
         <p>Release Date: ${phone.releaseDate}</p>
         <p>Storage: ${phone.mainFeatures.storage}</p>
         <p>Others: ${phone.others ? phone.others.Bluetooth : 'No Bluetooth Information'}</p>
         <p>Sensor:
-          <ol>${sensorsList}</ol>
+          <ol>${sensorList}</ol>
          </p>
     `
 }
